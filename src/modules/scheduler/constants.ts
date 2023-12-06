@@ -1,0 +1,3 @@
+export const RUN_DEFAULT_JOB_PERIOD = process.env.RUN_DEFAULT_JOB_PERIOD || "* * * * *";
+export const JOB_EXECUTE_TIME_EXPIRE_SECONDS = 60;
+export const JOB_EXECUTE_TIME_AFTER_MIN_SECONDS = 5;

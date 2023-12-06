@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ESNEXT",
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "sourceMap": true,
+    "lib": ["es2021"],
+    "types": ["node", "jest", "reflect-metadata"],
+    "declaration": true,
+    "declarationDir": "dist",
+    "outDir": "dist",
+    "baseUrl": ".",
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
+    "paths": {
+      "*": ["node_modules/*", "src/types/*"],
+      "~test/*": ["test/*"],
+      "~src/*": ["src/*"],
+      "~api/*": ["src/modules/api/*"],
+      "~scheduler/*": ["src/modules/scheduler/*"]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "node_modules/@types/node/base.d.ts"
+  ],
+  "exclude": ["src/ormconfig.ts"]
+}

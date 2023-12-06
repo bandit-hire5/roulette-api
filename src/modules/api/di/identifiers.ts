@@ -1,0 +1,7 @@
+export default {
+  API_RUN_SCRIPT: Symbol.for("API_RUN_SCRIPT"),
+  JWKS_CLIENT: Symbol.for("JWKS_CLIENT"),
+  USER_REPOSITORY: Symbol.for("USER_REPOSITORY"),
+  COMPANY_REPOSITORY: Symbol.for("COMPANY_REPOSITORY"),
+  IDP_CLIENT: Symbol.for("IDP_CLIENT"),
+};
