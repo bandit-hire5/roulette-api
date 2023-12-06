@@ -19,6 +19,9 @@ import { SortDirections } from "~src/interfaces/app/sort";
  * @openapi
  * components:
  *   schemas:
+ *     UserDepartments:
+ *       type: string
+ *       enum: [DEVELOPER, HR, OFFICE ]
  *     UpdateMeRequest:
  *       type: object
  *       properties:
@@ -34,6 +37,8 @@ import { SortDirections } from "~src/interfaces/app/sort";
  *         timeZone:
  *           type: string
  *           default: Europe/Berlin
+ *         department:
+ *           $ref: '#/components/schemas/UserDepartments'
  *     UserResponse:
  *       allOf:
  *         - $ref: '#/components/schemas/UpdateMeRequest'

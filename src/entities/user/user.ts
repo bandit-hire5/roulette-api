@@ -15,6 +15,9 @@ export default class User extends Base implements IBase, IUser {
   @IsEmail()
   email: string;
 
+  @Column({ default: "" })
+  department: string;
+
   @Column({ length: 2, default: "" })
   locale: string;
 
