@@ -11,7 +11,7 @@
     "scripts": {
         "start": "node dist/index.js --service=roulette-api --activity=start",
         "pm2-start": "pm2-dev dist/index.js --service=roulette-api --activity=start",
-        "start-container": "npm run migration:run && npm run special:migration:run && npm start",
+        "start-container": "npm run migration:run && npm start",
         "build": "rimraf ./dist && npm run build-ts",
         "test": "node --max-old-space-size=2048 ./node_modules/.bin/jest -w 1 --forceExit --detectOpenHandles",
         "test:unit": "jest unit --forceExit --detectOpenHandles",

@@ -153,7 +153,7 @@ export default class RouletteController {
       attendees: members.map(({ email, name }) => ({ email, displayName: name })),
     };
 
-    //await cronofyClient.createEvent(member.refreshToken, calendarId, data);
+    await cronofyClient.createEvent(member.refreshToken, calendarId, data);
 
     ctx.body = {
       event: {
