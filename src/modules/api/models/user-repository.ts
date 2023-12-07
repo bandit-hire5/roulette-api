@@ -3,9 +3,11 @@ import IUser, {
   UserListFilters as IUserListFilters,
   UserSortFields,
 } from "~src/interfaces/entity/user";
+import ICronofy from "~src/interfaces/entity/cronofy";
 import { inject, injectable } from "inversify";
 import { EntityManager, ObjectType, Repository, SelectQueryBuilder } from "typeorm";
 import User from "~src/entities/user/user";
+import Cronofy from "~src/entities/user/cronofy";
 import IDENTIFIERS from "~src/di/identifiers";
 import IUserRepository from "~api/interfaces/user-repository";
 import AppError from "~src/models/error";
@@ -15,14 +17,19 @@ import { executeTransaction } from "~src/utils/transactions";
 import IRequestContext from "~api/interfaces/request";
 import { Sort as ISort, SortDirections } from "~src/interfaces/app/sort";
 import { Pagination as IPagination } from "~src/interfaces/app/pagination";
-import ICronofy from "~src/interfaces/entity/cronofy";
 
 @injectable()
 export default class UserRepository implements IUserRepository {
-  @inject(IDENTIFIERS.DB_DATA_REPOSITORY) getDbDataRepository: (entity: ObjectType<IUser>) => Repository<User>;
+  @inject(IDENTIFIERS.DB_DATA_REPOSITORY) getDbDataRepository: (
+    entity: ObjectType<IUser | ICronofy>
+  ) => Repository<User | Cronofy>;
 
   protected get userDbRepository(): Repository<User> {
     return this.getDbDataRepository(User) as Repository<User>;
+  }
+
+  protected get cronofyDbRepository(): Repository<Cronofy> {
+    return this.getDbDataRepository(Cronofy) as Repository<Cronofy>;
   }
 
   async get(id: string, companyId?: string): Promise<User> {
@@ -128,6 +135,16 @@ export default class UserRepository implements IUserRepository {
     return user;
   }
 
+  async disconnectFromCronofy(id: string): Promise<IUserFull> {
+    await this.cronofyDbRepository.delete({
+      user: {
+        id,
+      },
+    });
+
+    return this.get(id);
+  }
+
   async setPause(id: string, pauseMe: boolean): Promise<IUserFull> {
     const user = await this.get(id);
 
@@ -159,19 +176,21 @@ export default class UserRepository implements IUserRepository {
       throw new AppError(ERRORS.PERMISSION_DENIED, "User is pause for the random roulette");
     }
 
-    const participant = await this.userDbRepository
+    const participants = await this.userDbRepository
       .createQueryBuilder("User")
       .innerJoinAndMapOne("User.cronofy", "User.cronofy", "Cronofy")
       .where("User.companyId = :companyId", { companyId: company.id })
       .andWhere("User.id != :id", { id })
       .andWhere("User.department = :department", { department })
-      .getOne();
+      .getMany();
 
-    if (!participant) {
+    if (!participants?.length) {
       throw new AppError(ERRORS.NO_SUCH_ENTITY, "Unable to find participant");
     }
 
-    return [user, participant];
+    participants.sort(() => 0.5 - Math.random());
+
+    return [user, participants[0]];
   }
 
   async getList(

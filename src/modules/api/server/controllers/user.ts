@@ -301,4 +301,38 @@ export default class UserController {
     ctx.body = await userRepository.setPause(ctx.context.user.id, false);
     ctx.status = 200;
   }
+
+  /**
+   * @openapi
+   * /users/disconnect-from-cronofy:
+   *   put:
+   *     summary: Disconnect current user from cronofy
+   *     tags: [Users]
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       200:
+   *         description: Successful response indicating that the current user was disconnected successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 statusCode:
+   *                   type: integer
+   *                   default: 200
+   *                 data:
+   *                   $ref: '#/components/schemas/UserResponse'
+   *       401:
+   *         description: Unauthorized - The user is not authorized to access this endpoint
+   *       500:
+   *         description: Internal server error occurred
+   */
+  @Authorized()
+  public static async disconnectFromCronofy(@SetContextParam ctx: Context): Promise<void> {
+    const userRepository = (ctx.container as Container).get<IUserRepository>(IDENTIFIERS.USER_REPOSITORY);
+
+    ctx.body = await userRepository.disconnectFromCronofy(ctx.context.user.id);
+    ctx.status = 200;
+  }
 }

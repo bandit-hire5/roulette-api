@@ -27,5 +27,9 @@ userRouter.put(
   "/unpause-me",
   transformUserResponseDecorator(async (ctx: Context) => UserController.unpauseMe.call(null, ctx))
 );
+userRouter.put(
+  "/disconnect-from-cronofy",
+  transformUserResponseDecorator(async (ctx: Context) => UserController.disconnectFromCronofy.call(null, ctx))
+);
 
 export default userRouter;

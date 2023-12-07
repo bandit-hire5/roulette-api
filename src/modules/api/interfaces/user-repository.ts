@@ -22,6 +22,8 @@ export default interface UserRepository {
 
   connectWithCronofy(id: string, data: ICronofy): Promise<IUserFull>;
 
+  disconnectFromCronofy(id: string): Promise<IUserFull>;
+
   setPause(id: string, value: boolean): Promise<IUserFull>;
 
   remove(id: string): Promise<void>;
