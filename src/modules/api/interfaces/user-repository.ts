@@ -3,6 +3,7 @@ import IUser, {
   UserSortFields,
   UserListFilters as IUserListFilters,
 } from "~src/interfaces/entity/user";
+import ICronofy from "~src/interfaces/entity/cronofy";
 import IRequestContext from "~api/interfaces/request";
 import { Sort as ISort } from "~src/interfaces/app/sort";
 import { Pagination as IPagination } from "~src/interfaces/app/pagination";
@@ -17,7 +18,11 @@ export default interface UserRepository {
 
   create(data: Partial<IUser>): Promise<IUserFull>;
 
-  update(id: string, data: Partial<Omit<IUser, "company">>): Promise<IUserFull>;
+  update(id: string, data: Partial<Omit<IUser, "externalId" | "company">>): Promise<IUserFull>;
+
+  connectWithCronofy(id: string, data: ICronofy): Promise<IUserFull>;
+
+  setPause(id: string, value: boolean): Promise<IUserFull>;
 
   remove(id: string): Promise<void>;
 

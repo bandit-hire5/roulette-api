@@ -19,6 +19,18 @@ import { SortDirections } from "~src/interfaces/app/sort";
  * @openapi
  * components:
  *   schemas:
+ *     Company:
+ *       type: object
+ *       required:
+ *         - id
+ *         - name
+ *       properties:
+ *         id:
+ *           type: string
+ *           default: 146ecf32-65b0-491f-ba37-6270deffc34d
+ *         name:
+ *           type: string
+ *           default: Company name
  *     UserDepartments:
  *       type: string
  *       enum: [DEVELOPER, HR, OFFICE ]
@@ -51,6 +63,9 @@ import { SortDirections } from "~src/interfaces/app/sort";
  *             - locale
  *             - timeZone
  *             - email
+ *             - connectedWithCronofy
+ *             - pauseMe
+ *             - company
  *           properties:
  *             id:
  *               type: string
@@ -61,6 +76,14 @@ import { SortDirections } from "~src/interfaces/app/sort";
  *             email:
  *               type: string
  *               default: user@example.com
+ *             connectedWithCronofy:
+ *               type: boolean
+ *               default: true
+ *             pauseMe:
+ *               type: boolean
+ *               default: false
+ *             company:
+ *               $ref: '#/components/schemas/Company'
  */
 
 export default class UserController {
@@ -139,6 +162,36 @@ export default class UserController {
   /**
    * @openapi
    * /users/me:
+   *   get:
+   *     summary: Retrieves the current user information
+   *     tags: [Users]
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       200:
+   *         description: Successful response containing the current user information
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 statusCode:
+   *                   type: integer
+   *                   default: 200
+   *                 data:
+   *                   $ref: '#/components/schemas/UserResponse'
+   *       401:
+   *         description: Unauthorized - The user is not authorized to access this endpoint
+   */
+  @Authorized()
+  public static async getMe(@SetContextParam ctx: Context): Promise<void> {
+    ctx.body = ctx.context.user;
+    ctx.status = 200;
+  }
+
+  /**
+   * @openapi
+   * /users/me:
    *   put:
    *     summary: Updates current user
    *     tags: [Users]
@@ -183,15 +236,15 @@ export default class UserController {
 
   /**
    * @openapi
-   * /users/me:
-   *   get:
-   *     summary: Retrieves the current user information
+   * /users/pause-me:
+   *   put:
+   *     summary: Pause current user with meeting scheduling
    *     tags: [Users]
    *     security:
    *       - bearerAuth: []
    *     responses:
    *       200:
-   *         description: Successful response containing the current user information
+   *         description: Successful response indicating that the current user was paused successfully
    *         content:
    *           application/json:
    *             schema:
@@ -204,10 +257,48 @@ export default class UserController {
    *                   $ref: '#/components/schemas/UserResponse'
    *       401:
    *         description: Unauthorized - The user is not authorized to access this endpoint
+   *       500:
+   *         description: Internal server error occurred
    */
   @Authorized()
-  public static async getMe(@SetContextParam ctx: Context): Promise<void> {
-    ctx.body = ctx.context.user;
+  public static async pauseMe(@SetContextParam ctx: Context): Promise<void> {
+    const userRepository = (ctx.container as Container).get<IUserRepository>(IDENTIFIERS.USER_REPOSITORY);
+
+    ctx.body = await userRepository.setPause(ctx.context.user.id, true);
+    ctx.status = 200;
+  }
+
+  /**
+   * @openapi
+   * /users/unpause-me:
+   *   put:
+   *     summary: Unpause current user with meeting scheduling
+   *     tags: [Users]
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       200:
+   *         description: Successful response indicating that the current user was unpaused successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 statusCode:
+   *                   type: integer
+   *                   default: 200
+   *                 data:
+   *                   $ref: '#/components/schemas/UserResponse'
+   *       401:
+   *         description: Unauthorized - The user is not authorized to access this endpoint
+   *       500:
+   *         description: Internal server error occurred
+   */
+  @Authorized()
+  public static async unpauseMe(@SetContextParam ctx: Context): Promise<void> {
+    const userRepository = (ctx.container as Container).get<IUserRepository>(IDENTIFIERS.USER_REPOSITORY);
+
+    ctx.body = await userRepository.setPause(ctx.context.user.id, false);
     ctx.status = 200;
   }
 }

@@ -11,6 +11,8 @@ import UserRepository from "~api/models/user-repository";
 import { API_SOFTGARDEN_WELL_KNOWN_ROUTE } from "~api/constants";
 import ICompanyRepository from "~api/interfaces/company-repository";
 import CompanyRepository from "~api/models/company-repository";
+import ICronofyClient from "~api/interfaces/providers/cronofy";
+import CronofyClient from "~api/providers/cronofy";
 
 @injectable()
 export default class ApiModule implements IModule {
@@ -26,6 +28,8 @@ export default class ApiModule implements IModule {
     container.bind<ICompanyRepository>(IDENTIFIERS.COMPANY_REPOSITORY).to(CompanyRepository).inSingletonScope();
 
     container.bind<IUserRepository>(IDENTIFIERS.USER_REPOSITORY).to(UserRepository).inSingletonScope();
+
+    container.bind<ICronofyClient>(IDENTIFIERS.CRONOFY_CLIENT).to(CronofyClient);
 
     container
       .bind<JwksClient>(IDENTIFIERS.JWKS_CLIENT)

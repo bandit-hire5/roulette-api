@@ -15,6 +15,7 @@ import { executeTransaction } from "~src/utils/transactions";
 import IRequestContext from "~api/interfaces/request";
 import { Sort as ISort, SortDirections } from "~src/interfaces/app/sort";
 import { Pagination as IPagination } from "~src/interfaces/app/pagination";
+import ICronofy from "~src/interfaces/entity/cronofy";
 
 @injectable()
 export default class UserRepository implements IUserRepository {
@@ -99,14 +100,38 @@ export default class UserRepository implements IUserRepository {
     return user;
   }
 
-  async update(id: string, data: Partial<Omit<IUser, "company">>): Promise<IUserFull> {
+  async update(id: string, data: Partial<Omit<IUser, "externalId" | "company">>): Promise<IUserFull> {
     const user = await this.get(id);
 
-    if (!user) {
-      throw new AppError(ERRORS.NO_SUCH_ENTITY, "User doesn't exist");
-    }
-
     this.userDbRepository.merge(user, data);
+
+    await assert(user);
+
+    await executeTransaction(async (transactionManager: EntityManager): Promise<void> => {
+      await transactionManager.save(User, user);
+    });
+
+    return user;
+  }
+
+  async connectWithCronofy(id: string, data: ICronofy): Promise<IUserFull> {
+    const user = await this.get(id);
+
+    this.userDbRepository.merge(user, { cronofy: { ...user.cronofy, ...data } });
+
+    await assert(user);
+
+    await executeTransaction(async (transactionManager: EntityManager): Promise<void> => {
+      await transactionManager.save(User, user);
+    });
+
+    return user;
+  }
+
+  async setPause(id: string, pauseMe: boolean): Promise<IUserFull> {
+    const user = await this.get(id);
+
+    this.userDbRepository.merge(user, { pauseMe });
 
     await assert(user);
 

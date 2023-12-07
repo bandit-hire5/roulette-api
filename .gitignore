@@ -40,3 +40,5 @@ yarn.lock
 
 db/*
 !db/.gitkeep
+
+index.html

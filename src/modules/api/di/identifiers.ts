@@ -4,4 +4,5 @@ export default {
   USER_REPOSITORY: Symbol.for("USER_REPOSITORY"),
   COMPANY_REPOSITORY: Symbol.for("COMPANY_REPOSITORY"),
   IDP_CLIENT: Symbol.for("IDP_CLIENT"),
+  CRONOFY_CLIENT: Symbol.for("CRONOFY_CLIENT"),
 };
