@@ -34,3 +34,20 @@ export const transformUserListResponseDecorator = (handler: (ctx: Context) => Pr
     return transformUserListResponse(handler, ctx);
   };
 };
+
+const transformStartRouletteResponse = async (
+  handler: (ctx: Context) => Promise<void>,
+  ctx: Context
+): Promise<void> => {
+  await handler.call(this, ctx);
+
+  const response = ctx.body as { event: object; participants: IUserFull[] };
+
+  ctx.body = { ...response, participants: response.participants.map((user) => transformFullUserToFlat(user)) };
+};
+
+export const transformStartRouletteResponseDecorator = (handler: (ctx: Context) => Promise<void>) => {
+  return (ctx: Context) => {
+    return transformStartRouletteResponse(handler, ctx);
+  };
+};

@@ -34,4 +34,6 @@ export default interface UserRepository {
   ): Promise<IUserFull[]>;
 
   getCount(context: IRequestContext, filters?: IUserListFilters): Promise<number>;
+
+  getRandomEventParticipants(context: IRequestContext): Promise<IUserFull[]>;
 }

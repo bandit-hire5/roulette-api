@@ -52,11 +52,13 @@ import KoaRouter from "koa-router";
  */
 
 import userBuilder from "./user";
+import rouletteBuilder from "./roulette";
 
 const APIRouter = new KoaRouter({
   prefix: "/v1",
 });
 
 APIRouter.use(userBuilder.routes());
+APIRouter.use(rouletteBuilder.routes());
 
 export default APIRouter;

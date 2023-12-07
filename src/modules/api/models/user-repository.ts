@@ -148,6 +148,32 @@ export default class UserRepository implements IUserRepository {
     });
   }
 
+  async getRandomEventParticipants({ user, company }: IRequestContext): Promise<IUserFull[]> {
+    const { id, cronofy, pauseMe, department } = user;
+
+    if (!cronofy) {
+      throw new AppError(ERRORS.PERMISSION_DENIED, "User is not connected with cronofy");
+    }
+
+    if (pauseMe) {
+      throw new AppError(ERRORS.PERMISSION_DENIED, "User is pause for the random roulette");
+    }
+
+    const participant = await this.userDbRepository
+      .createQueryBuilder("User")
+      .innerJoinAndMapOne("User.cronofy", "User.cronofy", "Cronofy")
+      .where("User.companyId = :companyId", { companyId: company.id })
+      .andWhere("User.id != :id", { id })
+      .andWhere("User.department = :department", { department })
+      .getOne();
+
+    if (!participant) {
+      throw new AppError(ERRORS.NO_SUCH_ENTITY, "Unable to find participant");
+    }
+
+    return [user, participant];
+  }
+
   async getList(
     context: IRequestContext,
     filters?: IUserListFilters,

@@ -24,3 +24,23 @@ export const scheduleDateByTimestamp = (timestamp: number, minSeconds = 0): Date
 
   return scheduleDate;
 };
+
+export const getNextWorkingDay = (currentDate: Date): Date => {
+  const nextDay = new Date(currentDate);
+
+  nextDay.setDate(currentDate.getDate() + 1);
+
+  while (nextDay.getDay() === 0 || nextDay.getDay() === 6) {
+    nextDay.setDate(nextDay.getDate() + 1);
+  }
+
+  return nextDay;
+};
+
+export const setSpecificTime = (date: Date, hours = 0, min = 0, sec = 0, ms = 0): Date => {
+  date.setHours(hours, min, sec, ms);
+
+  return date;
+};
+
+export const formatDateTime = (date: Date): string => date.toISOString().slice(0, 19) + "Z";

@@ -13,3 +13,7 @@ export const CRONOFY_CLIENT_ID = process.env.CRONOFY_CLIENT_ID;
 export const CRONOFY_CLIENT_SECRET = process.env.CRONOFY_CLIENT_SECRET;
 export const CRONOFY_DATA_CENTER = process.env.CRONOFY_DATA_CENTER;
 export const CRONOFY_REDIRECT_URI = `${API_LINK}/cronofy-authorized-callback`;
+
+export const CRONOFY_DEFAULT_MEETING_DURATION = 30;
+export const CRONOFY_DEFAULT_BUFFER_BEFORE_DURATION = 15;
+export const CRONOFY_DEFAULT_BUFFER_AFTER_DURATION = 15;
