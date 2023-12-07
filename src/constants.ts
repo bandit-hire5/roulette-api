@@ -22,3 +22,5 @@ export const CONNECTION_MIGRATIONS = [resolve(__dirname, `./migrations/**/*.js`)
 export const CONNECTION_SUBSCRIBERS = [resolve(__dirname, `./subscribers/**/*.js`)];
 
 export const DEFAULT_TIMEZONE = "Europe/Berlin";
+export const DEFAULT_COMPANY_ID = "146ecf32-65b0-491f-ba37-6270deffc34d";
+export const DEFAULT_USER_EMAIL = process.env.DEFAULT_USER_EMAIL;

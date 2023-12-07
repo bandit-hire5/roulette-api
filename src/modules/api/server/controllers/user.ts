@@ -33,7 +33,7 @@ import { SortDirections } from "~src/interfaces/app/sort";
  *           default: Company name
  *     UserDepartments:
  *       type: string
- *       enum: [DEVELOPER, HR, OFFICE ]
+ *       enum: [DEVELOPER, HEAD, DESIGN ]
  *     UpdateMeRequest:
  *       type: object
  *       properties:

@@ -9,7 +9,7 @@ import IUserRepository from "~api/interfaces/user-repository";
 import IDENTIFIERS from "~api/di/identifiers";
 import IIDPClient from "~api/interfaces/providers/idp";
 import { SSO_AUDIENCE } from "~api/constants";
-import { DEFAULT_TIMEZONE } from "~src/constants";
+import { DEFAULT_COMPANY_ID, DEFAULT_USER_EMAIL } from "~src/constants";
 
 const TOKEN_AUTHORIZATION_TYPE = "Bearer";
 
@@ -18,7 +18,15 @@ const getTokenFromAuthorizationHeader = (header: string): string => {
 };
 
 export default async (ctx: Context, next: Next): Promise<void> => {
-  if (!ctx.req.headers.authorization || ctx.req.headers.authorization.indexOf(TOKEN_AUTHORIZATION_TYPE) === -1) {
+  const userRepository = (ctx.container as Container).get<IUserRepository>(IDENTIFIERS.USER_REPOSITORY);
+
+  const user = await userRepository.getByEmail(DEFAULT_USER_EMAIL, DEFAULT_COMPANY_ID);
+
+  ctx.context = { ...ctx.context, token: "", user, company: user?.company };
+
+  await next();
+
+  /*if (!ctx.req.headers.authorization || ctx.req.headers.authorization.indexOf(TOKEN_AUTHORIZATION_TYPE) === -1) {
     return next();
   }
 
@@ -91,5 +99,5 @@ export default async (ctx: Context, next: Next): Promise<void> => {
 
   ctx.context = { ...ctx.context, token, user, company: user?.company };
 
-  await next();
+  await next();*/
 };

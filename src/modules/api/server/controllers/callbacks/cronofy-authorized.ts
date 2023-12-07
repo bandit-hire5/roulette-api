@@ -17,8 +17,6 @@ export default class CronofyAuthorizedController {
 
       const data = await cronofyClient.getToken(code as string);
 
-      console.log(userId, data);
-
       await userRepository.connectWithCronofy(userId, {
         accessToken: data.access_token,
         refreshToken: data.refresh_token,
