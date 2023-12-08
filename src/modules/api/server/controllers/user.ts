@@ -62,6 +62,7 @@ import { SortDirections } from "~src/interfaces/app/sort";
  *             - lastName
  *             - locale
  *             - timeZone
+ *             - department
  *             - email
  *             - connectedWithCronofy
  *             - pauseMe
